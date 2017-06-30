@@ -6,6 +6,7 @@ import edward as ed
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+from IPython import embed
 
 from edward.models import Normal
 
@@ -31,23 +32,19 @@ D = 1   # number of features
 
 x_train, y_train = build_toy_dataset(N)
 
+
 W_0 = Normal(loc=tf.zeros([D, 2]), scale=tf.ones([D, 2]))
 W_1 = Normal(loc=tf.zeros([2, 1]), scale=tf.ones([2, 1]))
 b_0 = Normal(loc=tf.zeros(2), scale=tf.ones(2))
 b_1 = Normal(loc=tf.zeros(1), scale=tf.ones(1))
 
 x = x_train
-y = Normal(loc=neural_network(x, W_0, W_1, b_0, b_1),
-           scale=0.1 * tf.ones(N))
+y = Normal(loc=neural_network(x, W_0, W_1, b_0, b_1), scale=0.1 * tf.ones(N))
 
-qW_0 = Normal(loc=tf.Variable(tf.random_normal([D, 2])),
-              scale=tf.nn.softplus(tf.Variable(tf.random_normal([D, 2]))))
-qW_1 = Normal(loc=tf.Variable(tf.random_normal([2, 1])),
-              scale=tf.nn.softplus(tf.Variable(tf.random_normal([2, 1]))))
-qb_0 = Normal(loc=tf.Variable(tf.random_normal([2])),
-              scale=tf.nn.softplus(tf.Variable(tf.random_normal([2]))))
-qb_1 = Normal(loc=tf.Variable(tf.random_normal([1])),
-              scale=tf.nn.softplus(tf.Variable(tf.random_normal([1]))))
+qW_0 = Normal(loc=tf.Variable(tf.random_normal([D, 2])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([D, 2]))))
+qW_1 = Normal(loc=tf.Variable(tf.random_normal([2, 1])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([2, 1]))))
+qb_0 = Normal(loc=tf.Variable(tf.random_normal([2])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([2]))))
+qb_1 = Normal(loc=tf.Variable(tf.random_normal([1])), scale=tf.nn.softplus(tf.Variable(tf.random_normal([1]))))
 
 # Sample functions from variational model to visualize fits.
 rs = np.random.RandomState(0)
